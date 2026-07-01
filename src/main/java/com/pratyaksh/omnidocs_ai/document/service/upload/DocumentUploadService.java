@@ -1,4 +1,4 @@
-package com.pratyaksh.omnidocs_ai.document.service;
+package com.pratyaksh.omnidocs_ai.document.service.upload;
 
 import com.pratyaksh.omnidocs_ai.document.dto.UploadDocumentRequest;
 import com.pratyaksh.omnidocs_ai.document.dto.UploadDocumentResponse;

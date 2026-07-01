@@ -1,6 +1,8 @@
 package com.pratyaksh.omnidocs_ai.document.controller;
 
 import com.pratyaksh.omnidocs_ai.common.response.ApiResponse;
+import com.pratyaksh.omnidocs_ai.document.dto.DocumentResponse;
+import com.pratyaksh.omnidocs_ai.document.dto.DownloadDocumentResponse;
 import com.pratyaksh.omnidocs_ai.document.dto.UploadDocumentRequest;
 import com.pratyaksh.omnidocs_ai.document.dto.UploadDocumentResponse;
 import com.pratyaksh.omnidocs_ai.document.exception.DocumentUploadException;
@@ -11,11 +13,15 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -90,5 +96,36 @@ public class DocumentController {
     if (file.getSize() > MAX_FILE_SIZE) {
       throw new InvalidDocumentException("Maximum upload size is 20 MB.");
     }
+  }
+
+  @GetMapping("/{documentUuid}")
+  public ResponseEntity<ApiResponse<DocumentResponse>> getDocument(
+      @PathVariable UUID documentUuid) {
+
+    return ResponseEntity.ok(
+        ApiResponse.success(
+            documentApplicationService.getDocument(documentUuid)
+        )
+    );
+  }
+
+  @GetMapping("/{documentUuid}/download")
+  public ResponseEntity<Resource> downloadDocument(
+      @PathVariable UUID documentUuid) {
+
+    DownloadDocumentResponse response =
+        documentApplicationService.downloadDocument(documentUuid);
+
+    return ResponseEntity.ok()
+        .header(
+            HttpHeaders.CONTENT_DISPOSITION,
+            "attachment; filename=\"" + response.getOriginalFileName() + "\""
+        )
+        .header(
+            HttpHeaders.CONTENT_LENGTH,
+            String.valueOf(response.getFileSize())
+        )
+        .contentType(MediaType.parseMediaType(response.getContentType()))
+        .body(response.getResource());
   }
 }
