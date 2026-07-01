@@ -20,3 +20,6 @@ spring:
 logging:
   level:
     org.springframework: INFO
+
+storage:
+  location: uploads
