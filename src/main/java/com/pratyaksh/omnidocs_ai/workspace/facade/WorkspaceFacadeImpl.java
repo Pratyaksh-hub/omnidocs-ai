@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class WorkspaceFacedeImpl implements WorkspaceFacede {
+public class WorkspaceFacadeImpl implements WorkspaceFacade {
 
   private final WorkspaceCommandService workspaceCommandService;
   private final WorkspaceQueryService workspaceQueryService;

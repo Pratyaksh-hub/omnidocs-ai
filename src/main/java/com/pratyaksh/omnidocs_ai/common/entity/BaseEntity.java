@@ -35,6 +35,22 @@ public abstract class BaseEntity {
   @Column(nullable = false)
   private Long version;
 
+  @Column(nullable = false)
+  private boolean deleted = false;
+
+  @Column(name = "deleted_at")
+  private LocalDateTime deletedAt;
+
+  public void markDeleted() {
+    this.deleted = true;
+    this.deletedAt = LocalDateTime.now();
+  }
+
+  public void restore() {
+    this.deleted = false;
+    this.deletedAt = null;
+  }
+
   @PrePersist
   protected void prePersistBase() {
     if (uuid == null) {

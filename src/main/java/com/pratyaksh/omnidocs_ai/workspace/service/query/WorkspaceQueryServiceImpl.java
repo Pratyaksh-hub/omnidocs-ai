@@ -25,7 +25,7 @@ public class WorkspaceQueryServiceImpl implements WorkspaceQueryService {
 
   @Override
   public Workspace getEntity(UUID workspaceUuid) {
-    return workspaceRepository.findByUuid(workspaceUuid)
+    return workspaceRepository.findByUuidAndDeletedFalse(workspaceUuid)
         .orElseThrow(() -> new WorkspaceNotFoundException(workspaceUuid));
   }
 }

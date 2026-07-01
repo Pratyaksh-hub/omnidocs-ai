@@ -24,7 +24,7 @@ public class DocumentQueryServiceImpl implements DocumentQueryService {
   @Override
   public DocumentResponse getDocument(UUID documentUuid) {
 
-    Document document = documentRepository.findByUuid(documentUuid)
+    Document document = documentRepository.findByUuidAndDeletedFalse(documentUuid)
         .orElseThrow(() -> new DocumentNotFoundException(documentUuid));
 
     return documentMapper.toDocumentResponse(document);
@@ -37,7 +37,7 @@ public class DocumentQueryServiceImpl implements DocumentQueryService {
       Pageable pageable) {
 
     return documentRepository
-        .findByWorkspaceUuid(workspaceUuid, pageable)
+        .findByWorkspaceUuidAndDeletedFalse(workspaceUuid, pageable)
         .map(documentMapper::toSummaryResponse);
   }
 }

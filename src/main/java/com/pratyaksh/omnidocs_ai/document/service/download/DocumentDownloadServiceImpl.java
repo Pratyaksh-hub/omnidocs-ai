@@ -22,7 +22,7 @@ public class DocumentDownloadServiceImpl implements DocumentDownloadService {
   @Override
   public DownloadDocumentResponse download(UUID documentUuid) {
 
-    Document document = documentRepository.findByUuid(documentUuid)
+    Document document = documentRepository.findByUuidAndDeletedFalse(documentUuid)
         .orElseThrow(() -> new DocumentNotFoundException(documentUuid));
 
     Resource resource = storageService.load(

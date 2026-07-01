@@ -1,15 +1,16 @@
 package com.pratyaksh.omnidocs_ai.document.facade;
 
 import com.pratyaksh.omnidocs_ai.common.response.PageResponse;
+import com.pratyaksh.omnidocs_ai.document.request.UploadDocumentRequest;
 import com.pratyaksh.omnidocs_ai.document.response.DocumentResponse;
 import com.pratyaksh.omnidocs_ai.document.response.DocumentSummaryResponse;
 import com.pratyaksh.omnidocs_ai.document.response.DownloadDocumentResponse;
-import com.pratyaksh.omnidocs_ai.document.request.UploadDocumentRequest;
 import com.pratyaksh.omnidocs_ai.document.response.UploadDocumentResponse;
-import com.pratyaksh.omnidocs_ai.workspace.entity.Workspace;
+import com.pratyaksh.omnidocs_ai.document.service.delete.DocumentDeleteService;
 import com.pratyaksh.omnidocs_ai.document.service.download.DocumentDownloadService;
 import com.pratyaksh.omnidocs_ai.document.service.query.DocumentQueryService;
 import com.pratyaksh.omnidocs_ai.document.service.upload.DocumentUploadService;
+import com.pratyaksh.omnidocs_ai.workspace.entity.Workspace;
 import com.pratyaksh.omnidocs_ai.workspace.service.query.WorkspaceQueryService;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class DocumentFacadeImpl
   private final DocumentUploadService documentUploadService;
   private final DocumentQueryService documentQueryService;
   private final DocumentDownloadService documentDownloadService;
+  private final DocumentDeleteService documentDeleteService;
 
   @Override
   public UploadDocumentResponse uploadDocument(
@@ -69,5 +71,10 @@ public class DocumentFacadeImpl
         .first(page.isFirst())
         .last(page.isLast())
         .build();
+  }
+
+  @Override
+  public void deleteDocument(UUID documentUuid) {
+    documentDeleteService.delete(documentUuid);
   }
 }

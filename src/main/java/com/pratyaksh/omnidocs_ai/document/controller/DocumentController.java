@@ -1,13 +1,13 @@
 package com.pratyaksh.omnidocs_ai.document.controller;
 
 import com.pratyaksh.omnidocs_ai.common.response.ApiResponse;
-import com.pratyaksh.omnidocs_ai.document.response.DocumentResponse;
-import com.pratyaksh.omnidocs_ai.document.response.DownloadDocumentResponse;
-import com.pratyaksh.omnidocs_ai.document.request.UploadDocumentRequest;
-import com.pratyaksh.omnidocs_ai.document.response.UploadDocumentResponse;
 import com.pratyaksh.omnidocs_ai.document.exception.DocumentUploadException;
 import com.pratyaksh.omnidocs_ai.document.exception.InvalidDocumentException;
 import com.pratyaksh.omnidocs_ai.document.facade.DocumentFacade;
+import com.pratyaksh.omnidocs_ai.document.request.UploadDocumentRequest;
+import com.pratyaksh.omnidocs_ai.document.response.DocumentResponse;
+import com.pratyaksh.omnidocs_ai.document.response.DownloadDocumentResponse;
+import com.pratyaksh.omnidocs_ai.document.response.UploadDocumentResponse;
 import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.Set;
@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -127,5 +128,14 @@ public class DocumentController {
         )
         .contentType(MediaType.parseMediaType(response.getContentType()))
         .body(response.getResource());
+  }
+
+  @DeleteMapping("/{documentUuid}")
+  public ResponseEntity<Void> delete(
+      @PathVariable UUID documentUuid) {
+
+    documentFacade.deleteDocument(documentUuid);
+
+    return ResponseEntity.noContent().build();
   }
 }

@@ -5,7 +5,7 @@ import com.pratyaksh.omnidocs_ai.workspace.dto.UpdateWorkspaceRequest;
 import com.pratyaksh.omnidocs_ai.workspace.dto.WorkspaceResponse;
 import java.util.UUID;
 
-public interface WorkspaceFacede {
+public interface WorkspaceFacade {
 
   WorkspaceResponse createWorkspace(CreateWorkspaceRequest request);
 

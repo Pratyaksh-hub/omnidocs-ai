@@ -11,7 +11,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long> {
 
-  Optional<Document> findByUuid(UUID uuid);
+  Optional<Document> findByUuidAndDeletedFalse(UUID uuid);
 
-  Page<Document> findByWorkspaceUuid(UUID workspaceUuid, Pageable pageable);
+  Page<Document> findByWorkspaceUuidAndDeletedFalse(
+      UUID workspaceUuid,
+      Pageable pageable
+  );
 }

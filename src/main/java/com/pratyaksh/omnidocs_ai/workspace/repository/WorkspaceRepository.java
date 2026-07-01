@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
 
-  Optional<Workspace> findByUuid(UUID uuid);
+  Optional<Workspace> findByUuidAndDeletedFalse(UUID uuid);
 
   boolean existsByUuid(UUID uuid);
 

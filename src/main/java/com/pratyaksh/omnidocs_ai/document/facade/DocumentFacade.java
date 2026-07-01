@@ -21,4 +21,6 @@ public interface DocumentFacade {
       UUID workspaceUuid,
       Pageable pageable
   );
+
+  void deleteDocument(UUID documentUuid);
 }
