@@ -1,6 +1,6 @@
 package com.pratyaksh.omnidocs_ai.document.service.download;
 
-import com.pratyaksh.omnidocs_ai.document.dto.DownloadDocumentResponse;
+import com.pratyaksh.omnidocs_ai.document.response.DownloadDocumentResponse;
 import com.pratyaksh.omnidocs_ai.document.entity.Document;
 import com.pratyaksh.omnidocs_ai.document.exception.DocumentNotFoundException;
 import com.pratyaksh.omnidocs_ai.document.repository.DocumentRepository;

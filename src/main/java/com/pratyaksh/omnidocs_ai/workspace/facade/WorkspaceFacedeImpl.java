@@ -1,0 +1,39 @@
+package com.pratyaksh.omnidocs_ai.workspace.facade;
+
+import com.pratyaksh.omnidocs_ai.workspace.dto.CreateWorkspaceRequest;
+import com.pratyaksh.omnidocs_ai.workspace.dto.UpdateWorkspaceRequest;
+import com.pratyaksh.omnidocs_ai.workspace.dto.WorkspaceResponse;
+import com.pratyaksh.omnidocs_ai.workspace.service.command.WorkspaceCommandService;
+import com.pratyaksh.omnidocs_ai.workspace.service.query.WorkspaceQueryService;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class WorkspaceFacedeImpl implements WorkspaceFacede {
+
+  private final WorkspaceCommandService workspaceCommandService;
+  private final WorkspaceQueryService workspaceQueryService;
+
+  @Override
+  public WorkspaceResponse createWorkspace(CreateWorkspaceRequest request) {
+    return workspaceCommandService.create(request);
+  }
+
+  @Override
+  public WorkspaceResponse getWorkspace(UUID workspaceUuid) {
+    return workspaceQueryService.get(workspaceUuid);
+  }
+
+  @Override
+  public WorkspaceResponse updateWorkspace(UUID workspaceUuid,
+      UpdateWorkspaceRequest request) {
+    return workspaceCommandService.update(workspaceUuid, request);
+  }
+
+  @Override
+  public void deleteWorkspace(UUID workspaceUuid) {
+    workspaceCommandService.delete(workspaceUuid);
+  }
+}

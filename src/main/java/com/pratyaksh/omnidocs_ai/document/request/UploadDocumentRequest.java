@@ -1,4 +1,4 @@
-package com.pratyaksh.omnidocs_ai.document.dto;
+package com.pratyaksh.omnidocs_ai.document.request;
 
 import java.io.InputStream;
 import java.util.UUID;

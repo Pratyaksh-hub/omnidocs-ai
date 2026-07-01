@@ -1,8 +1,8 @@
 package com.pratyaksh.omnidocs_ai.document.service.upload;
 
-import com.pratyaksh.omnidocs_ai.document.dto.UploadDocumentRequest;
-import com.pratyaksh.omnidocs_ai.document.dto.UploadDocumentResponse;
-import com.pratyaksh.omnidocs_ai.document.entity.Workspace;
+import com.pratyaksh.omnidocs_ai.document.request.UploadDocumentRequest;
+import com.pratyaksh.omnidocs_ai.document.response.UploadDocumentResponse;
+import com.pratyaksh.omnidocs_ai.workspace.entity.Workspace;
 
 public interface DocumentUploadService {
 

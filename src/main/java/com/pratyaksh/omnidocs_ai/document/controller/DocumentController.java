@@ -1,13 +1,13 @@
 package com.pratyaksh.omnidocs_ai.document.controller;
 
 import com.pratyaksh.omnidocs_ai.common.response.ApiResponse;
-import com.pratyaksh.omnidocs_ai.document.dto.DocumentResponse;
-import com.pratyaksh.omnidocs_ai.document.dto.DownloadDocumentResponse;
-import com.pratyaksh.omnidocs_ai.document.dto.UploadDocumentRequest;
-import com.pratyaksh.omnidocs_ai.document.dto.UploadDocumentResponse;
+import com.pratyaksh.omnidocs_ai.document.response.DocumentResponse;
+import com.pratyaksh.omnidocs_ai.document.response.DownloadDocumentResponse;
+import com.pratyaksh.omnidocs_ai.document.request.UploadDocumentRequest;
+import com.pratyaksh.omnidocs_ai.document.response.UploadDocumentResponse;
 import com.pratyaksh.omnidocs_ai.document.exception.DocumentUploadException;
 import com.pratyaksh.omnidocs_ai.document.exception.InvalidDocumentException;
-import com.pratyaksh.omnidocs_ai.document.service.application.DocumentApplicationService;
+import com.pratyaksh.omnidocs_ai.document.facade.DocumentFacade;
 import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.Set;
@@ -35,7 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Validated
 public class DocumentController {
 
-  private final DocumentApplicationService documentApplicationService;
+  private final DocumentFacade documentFacade;
 
   private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of(
       MediaType.APPLICATION_PDF_VALUE,
@@ -73,7 +73,7 @@ public class DocumentController {
     }
 
     UploadDocumentResponse response =
-        documentApplicationService.uploadDocument(request);
+        documentFacade.uploadDocument(request);
 
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(ApiResponse.success(response));
@@ -104,7 +104,7 @@ public class DocumentController {
 
     return ResponseEntity.ok(
         ApiResponse.success(
-            documentApplicationService.getDocument(documentUuid)
+            documentFacade.getDocument(documentUuid)
         )
     );
   }
@@ -114,7 +114,7 @@ public class DocumentController {
       @PathVariable UUID documentUuid) {
 
     DownloadDocumentResponse response =
-        documentApplicationService.downloadDocument(documentUuid);
+        documentFacade.downloadDocument(documentUuid);
 
     return ResponseEntity.ok()
         .header(

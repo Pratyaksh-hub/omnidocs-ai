@@ -1,10 +1,10 @@
 package com.pratyaksh.omnidocs_ai.document.service.upload;
 
-import com.pratyaksh.omnidocs_ai.document.dto.UploadDocumentRequest;
-import com.pratyaksh.omnidocs_ai.document.dto.UploadDocumentResponse;
+import com.pratyaksh.omnidocs_ai.document.request.UploadDocumentRequest;
+import com.pratyaksh.omnidocs_ai.document.response.UploadDocumentResponse;
 import com.pratyaksh.omnidocs_ai.document.entity.Document;
 import com.pratyaksh.omnidocs_ai.document.entity.StoredFile;
-import com.pratyaksh.omnidocs_ai.document.entity.Workspace;
+import com.pratyaksh.omnidocs_ai.workspace.entity.Workspace;
 import com.pratyaksh.omnidocs_ai.document.exception.DocumentUploadException;
 import com.pratyaksh.omnidocs_ai.document.mapper.DocumentMapper;
 import com.pratyaksh.omnidocs_ai.document.repository.DocumentRepository;

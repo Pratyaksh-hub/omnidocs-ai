@@ -1,12 +1,15 @@
 package com.pratyaksh.omnidocs_ai.document.service.query;
 
-import com.pratyaksh.omnidocs_ai.document.dto.DocumentResponse;
+import com.pratyaksh.omnidocs_ai.document.response.DocumentResponse;
+import com.pratyaksh.omnidocs_ai.document.response.DocumentSummaryResponse;
 import com.pratyaksh.omnidocs_ai.document.entity.Document;
 import com.pratyaksh.omnidocs_ai.document.exception.DocumentNotFoundException;
 import com.pratyaksh.omnidocs_ai.document.mapper.DocumentMapper;
 import com.pratyaksh.omnidocs_ai.document.repository.DocumentRepository;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,5 +28,16 @@ public class DocumentQueryServiceImpl implements DocumentQueryService {
         .orElseThrow(() -> new DocumentNotFoundException(documentUuid));
 
     return documentMapper.toDocumentResponse(document);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Page<DocumentSummaryResponse> getDocuments(
+      UUID workspaceUuid,
+      Pageable pageable) {
+
+    return documentRepository
+        .findByWorkspaceUuid(workspaceUuid, pageable)
+        .map(documentMapper::toSummaryResponse);
   }
 }

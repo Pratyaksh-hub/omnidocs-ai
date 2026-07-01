@@ -1,4 +1,4 @@
-package com.pratyaksh.omnidocs_ai.document.dto;
+package com.pratyaksh.omnidocs_ai.document.response;
 
 import com.pratyaksh.omnidocs_ai.document.entity.DocumentStatus;
 import java.time.LocalDateTime;
@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DocumentResponse {
+public class DocumentSummaryResponse {
 
   private UUID documentUuid;
 
@@ -20,7 +20,6 @@ public class DocumentResponse {
 
   private DocumentStatus status;
 
-  private UUID workspaceUuid;
-
   private LocalDateTime createdAt;
+
 }

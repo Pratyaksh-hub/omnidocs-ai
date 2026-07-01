@@ -1,4 +1,4 @@
-package com.pratyaksh.omnidocs_ai.document.entity;
+package com.pratyaksh.omnidocs_ai.workspace.entity;
 
 import com.pratyaksh.omnidocs_ai.common.entity.BaseEntity;
 import jakarta.persistence.*;

@@ -1,6 +1,7 @@
 package com.pratyaksh.omnidocs_ai.document.entity;
 
 import com.pratyaksh.omnidocs_ai.common.entity.BaseEntity;
+import com.pratyaksh.omnidocs_ai.workspace.entity.Workspace;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

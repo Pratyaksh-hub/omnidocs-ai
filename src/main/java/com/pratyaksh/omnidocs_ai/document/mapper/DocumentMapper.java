@@ -1,8 +1,9 @@
 package com.pratyaksh.omnidocs_ai.document.mapper;
 
 import com.pratyaksh.omnidocs_ai.common.mapper.MapperConfiguration;
-import com.pratyaksh.omnidocs_ai.document.dto.DocumentResponse;
-import com.pratyaksh.omnidocs_ai.document.dto.UploadDocumentResponse;
+import com.pratyaksh.omnidocs_ai.document.response.DocumentResponse;
+import com.pratyaksh.omnidocs_ai.document.response.DocumentSummaryResponse;
+import com.pratyaksh.omnidocs_ai.document.response.UploadDocumentResponse;
 import com.pratyaksh.omnidocs_ai.document.entity.Document;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,4 +19,7 @@ public interface DocumentMapper {
   @Mapping(target = "fileSize", source = "storedFile.fileSize")
   DocumentResponse toDocumentResponse(Document document);
 
+  @Mapping(target = "documentUuid", source = "uuid")
+  @Mapping(target = "fileSize", source = "storedFile.fileSize")
+  DocumentSummaryResponse toSummaryResponse(Document document);
 }

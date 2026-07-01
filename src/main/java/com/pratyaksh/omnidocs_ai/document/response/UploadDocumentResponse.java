@@ -1,4 +1,4 @@
-package com.pratyaksh.omnidocs_ai.document.dto;
+package com.pratyaksh.omnidocs_ai.document.response;
 
 import com.pratyaksh.omnidocs_ai.document.entity.DocumentStatus;
 import lombok.Builder;
