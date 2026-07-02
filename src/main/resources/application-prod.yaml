@@ -25,4 +25,4 @@ gemini:
   api-key: ${GEMINI_API_KEY}
 
 storage:
-  upload-dir: ${UPLOAD_DIR}
+  location: ${UPLOAD_DIR:uploads}

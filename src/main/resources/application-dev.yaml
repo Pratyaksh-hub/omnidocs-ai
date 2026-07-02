@@ -22,4 +22,4 @@ logging:
     org.springframework: INFO
 
 storage:
-  location: uploads
+  location: ${UPLOAD_DIR:uploads}
