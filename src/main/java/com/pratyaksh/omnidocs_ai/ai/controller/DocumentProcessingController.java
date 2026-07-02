@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/ai/documents")
 @RequiredArgsConstructor
-@CrossOrigin
+//@CrossOrigin
 public class DocumentProcessingController {
 
   private final DocumentProcessor documentProcessor;
