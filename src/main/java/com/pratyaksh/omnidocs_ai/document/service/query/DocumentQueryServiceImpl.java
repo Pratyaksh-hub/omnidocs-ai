@@ -50,4 +50,25 @@ public class DocumentQueryServiceImpl implements DocumentQueryService {
         .orElseThrow(() ->
             new DocumentNotFoundException(documentUuid));
   }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Page<DocumentSummaryResponse> getDeletedDocuments(
+      UUID workspaceUuid,
+      Pageable pageable) {
+
+    return documentRepository
+        .findByWorkspace_UuidAndDeletedTrue(workspaceUuid, pageable)
+        .map(documentMapper::toSummaryResponse);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Page<DocumentSummaryResponse> getDeletedDocuments(
+      Pageable pageable) {
+
+    return documentRepository
+        .findByDeletedTrue(pageable)
+        .map(documentMapper::toSummaryResponse);
+  }
 }

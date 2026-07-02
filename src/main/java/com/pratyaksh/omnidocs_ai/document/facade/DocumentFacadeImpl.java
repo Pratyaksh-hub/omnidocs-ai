@@ -77,4 +77,28 @@ public class DocumentFacadeImpl
   public void deleteDocument(UUID documentUuid) {
     documentDeleteService.delete(documentUuid);
   }
+
+  @Override
+  @Transactional(readOnly = true)
+  public PageResponse<DocumentSummaryResponse> getDeletedDocuments(
+      UUID workspaceUuid,
+      Pageable pageable) {
+
+    return PageResponse.of(
+        documentQueryService.getDeletedDocuments(
+            workspaceUuid,
+            pageable
+        )
+    );
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public PageResponse<DocumentSummaryResponse> getDeletedDocuments(
+      Pageable pageable) {
+
+    return PageResponse.of(
+        documentQueryService.getDeletedDocuments(pageable)
+    );
+  }
 }

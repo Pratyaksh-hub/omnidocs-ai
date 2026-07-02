@@ -22,4 +22,8 @@ public class DocumentSummaryResponse {
 
   private LocalDateTime createdAt;
 
+  private UUID workspaceUuid;
+
+  private String workspaceName;
+
 }

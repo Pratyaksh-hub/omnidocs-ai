@@ -21,5 +21,8 @@ public interface DocumentMapper {
 
   @Mapping(target = "documentUuid", source = "uuid")
   @Mapping(target = "fileSize", source = "storedFile.fileSize")
+  @Mapping(target = "workspaceUuid", source = "workspace.uuid")
+  @Mapping(target = "workspaceName", source = "workspace.name")
   DocumentSummaryResponse toSummaryResponse(Document document);
+
 }

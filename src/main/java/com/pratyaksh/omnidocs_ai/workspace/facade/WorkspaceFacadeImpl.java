@@ -1,5 +1,6 @@
 package com.pratyaksh.omnidocs_ai.workspace.facade;
 
+import com.pratyaksh.omnidocs_ai.common.response.PageResponse;
 import com.pratyaksh.omnidocs_ai.workspace.dto.CreateWorkspaceRequest;
 import com.pratyaksh.omnidocs_ai.workspace.dto.UpdateWorkspaceRequest;
 import com.pratyaksh.omnidocs_ai.workspace.dto.WorkspaceResponse;
@@ -7,6 +8,8 @@ import com.pratyaksh.omnidocs_ai.workspace.service.command.WorkspaceCommandServi
 import com.pratyaksh.omnidocs_ai.workspace.service.query.WorkspaceQueryService;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,5 +38,15 @@ public class WorkspaceFacadeImpl implements WorkspaceFacade {
   @Override
   public void deleteWorkspace(UUID workspaceUuid) {
     workspaceCommandService.delete(workspaceUuid);
+  }
+
+  @Override
+  public PageResponse<WorkspaceResponse> getAllWorkspaces(
+      Pageable pageable) {
+
+    Page<WorkspaceResponse> page =
+        workspaceQueryService.getAll(pageable);
+
+    return PageResponse.of(page);
   }
 }

@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/workspaces")
 @RequiredArgsConstructor
+@CrossOrigin
 public class WorkspaceController {
 
   private final WorkspaceFacade workspaceFacade;
@@ -88,5 +90,31 @@ public class WorkspaceController {
     workspaceFacade.deleteWorkspace(workspaceUuid);
 
     return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping
+  public ResponseEntity<ApiResponse<PageResponse<WorkspaceResponse>>> getAll(
+      Pageable pageable) {
+
+    return ResponseEntity.ok(
+        ApiResponse.success(
+            workspaceFacade.getAllWorkspaces(pageable)
+        )
+    );
+  }
+
+  @GetMapping("/{workspaceUuid}/documents/deleted")
+  public ResponseEntity<ApiResponse<PageResponse<DocumentSummaryResponse>>> getDeletedDocuments(
+      @PathVariable UUID workspaceUuid,
+      Pageable pageable) {
+
+    return ResponseEntity.ok(
+        ApiResponse.success(
+            documentFacade.getDeletedDocuments(
+                workspaceUuid,
+                pageable
+            )
+        )
+    );
   }
 }

@@ -2,13 +2,14 @@ package com.pratyaksh.omnidocs_ai.common.exception;
 
 import com.pratyaksh.omnidocs_ai.common.response.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.time.LocalDateTime;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -82,5 +83,18 @@ public class GlobalExceptionHandler {
             .success(false)
             .error(error)
             .build());
+  }
+
+  @ExceptionHandler(NoResourceFoundException.class)
+  public ResponseEntity<ApiResponse<Void>> handleNoResourceFound(
+      NoResourceFoundException ex) {
+
+    ErrorResponse error = ErrorResponse.builder()
+        .code("NOT_FOUND")
+        .message("Resource not found.")
+        .build();
+
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(ApiResponse.failure(error));
   }
 }

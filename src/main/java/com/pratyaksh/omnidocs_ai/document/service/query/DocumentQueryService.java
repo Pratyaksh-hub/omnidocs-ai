@@ -17,4 +17,13 @@ public interface DocumentQueryService {
   );
 
   Document getEntity(UUID documentUuid);
+
+  Page<DocumentSummaryResponse> getDeletedDocuments(
+      UUID workspaceUuid,
+      Pageable pageable
+  );
+
+  Page<DocumentSummaryResponse> getDeletedDocuments(
+      Pageable pageable
+  );
 }

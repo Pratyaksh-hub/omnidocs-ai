@@ -23,4 +23,13 @@ public interface DocumentFacade {
   );
 
   void deleteDocument(UUID documentUuid);
+
+  PageResponse<DocumentSummaryResponse> getDeletedDocuments(
+      UUID workspaceUuid,
+      Pageable pageable
+  );
+
+  PageResponse<DocumentSummaryResponse> getDeletedDocuments(
+      Pageable pageable
+  );
 }

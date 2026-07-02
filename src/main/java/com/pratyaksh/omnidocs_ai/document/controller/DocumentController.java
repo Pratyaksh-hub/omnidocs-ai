@@ -1,11 +1,13 @@
 package com.pratyaksh.omnidocs_ai.document.controller;
 
 import com.pratyaksh.omnidocs_ai.common.response.ApiResponse;
+import com.pratyaksh.omnidocs_ai.common.response.PageResponse;
 import com.pratyaksh.omnidocs_ai.document.exception.DocumentUploadException;
 import com.pratyaksh.omnidocs_ai.document.exception.InvalidDocumentException;
 import com.pratyaksh.omnidocs_ai.document.facade.DocumentFacade;
 import com.pratyaksh.omnidocs_ai.document.request.UploadDocumentRequest;
 import com.pratyaksh.omnidocs_ai.document.response.DocumentResponse;
+import com.pratyaksh.omnidocs_ai.document.response.DocumentSummaryResponse;
 import com.pratyaksh.omnidocs_ai.document.response.DownloadDocumentResponse;
 import com.pratyaksh.omnidocs_ai.document.response.UploadDocumentResponse;
 import jakarta.validation.constraints.NotNull;
@@ -14,12 +16,14 @@ import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/v1/documents")
 @RequiredArgsConstructor
 @Validated
+@CrossOrigin
 public class DocumentController {
 
   private static final long MAX_FILE_SIZE = 20 * 1024 * 1024;
@@ -109,16 +114,18 @@ public class DocumentController {
 
   @GetMapping("/{documentUuid}/download")
   public ResponseEntity<Resource> downloadDocument(
-      @PathVariable UUID documentUuid) {
+      @PathVariable UUID documentUuid,
+      @RequestParam(value = "inline", required = false, defaultValue = "false") boolean inline) {
 
     DownloadDocumentResponse response =
         documentFacade.downloadDocument(documentUuid);
 
+    // Determine disposition layout based on the UI request flag
+    String dispositionType = inline ? "inline" : "attachment";
+    String contentDisposition = dispositionType + "; filename=\"" + response.getOriginalFileName() + "\"";
+
     return ResponseEntity.ok()
-        .header(
-            HttpHeaders.CONTENT_DISPOSITION,
-            "attachment; filename=\"" + response.getOriginalFileName() + "\""
-        )
+        .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
         .header(
             HttpHeaders.CONTENT_LENGTH,
             String.valueOf(response.getFileSize())
@@ -134,5 +141,16 @@ public class DocumentController {
     documentFacade.deleteDocument(documentUuid);
 
     return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("/deleted")
+  public ResponseEntity<ApiResponse<PageResponse<DocumentSummaryResponse>>> getDeletedDocuments(
+      Pageable pageable) {
+
+    return ResponseEntity.ok(
+        ApiResponse.success(
+            documentFacade.getDeletedDocuments(pageable)
+        )
+    );
   }
 }

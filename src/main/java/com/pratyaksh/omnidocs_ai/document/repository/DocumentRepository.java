@@ -18,4 +18,10 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
       Pageable pageable
   );
 
+  Page<Document> findByWorkspace_UuidAndDeletedTrue(
+      UUID workspaceUuid,
+      Pageable pageable
+  );
+
+  Page<Document> findByDeletedTrue(Pageable pageable);
 }
