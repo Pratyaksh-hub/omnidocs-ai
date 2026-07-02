@@ -36,8 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Validated
 public class DocumentController {
 
-  private final DocumentFacade documentFacade;
-
+  private static final long MAX_FILE_SIZE = 20 * 1024 * 1024;
   private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of(
       MediaType.APPLICATION_PDF_VALUE,
       MediaType.TEXT_PLAIN_VALUE,
@@ -45,16 +44,14 @@ public class DocumentController {
       "application/msword"
   );
 
-  private static final long MAX_FILE_SIZE = 20 * 1024 * 1024;
+  private final DocumentFacade documentFacade;
 
   @PostMapping(
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE
   )
   public ResponseEntity<ApiResponse<UploadDocumentResponse>> uploadDocument(
-
       @RequestParam UUID workspaceUuid,
-
       @RequestPart("file") @NotNull MultipartFile file) throws IOException {
 
     validate(file);

@@ -4,3 +4,11 @@ spring:
 
   profiles:
     active: dev
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+
+      embedding:
+        options:
+          model: text-embedding-3-small

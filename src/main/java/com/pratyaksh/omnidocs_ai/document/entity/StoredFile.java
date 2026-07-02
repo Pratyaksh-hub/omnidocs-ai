@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
-@Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -38,7 +36,39 @@ public class StoredFile extends BaseEntity {
   private Long fileSize;
 
   @Column(nullable = false)
-  @Builder.Default
   private long referenceCount = 0L;
+
+  public static StoredFile create(
+      String checksum,
+      String storedFileName,
+      Long fileSize
+  ) {
+
+    StoredFile storedFile = new StoredFile();
+
+    storedFile.checksum = checksum;
+    storedFile.storedFileName = storedFileName;
+    storedFile.fileSize = fileSize;
+    storedFile.referenceCount = 1L;
+
+    return storedFile;
+  }
+
+  public void incrementReferenceCount() {
+    this.referenceCount++;
+  }
+
+  public void decrementReferenceCount() {
+
+    if (this.referenceCount == 0) {
+      throw new IllegalStateException("Reference count cannot be negative.");
+    }
+
+    this.referenceCount--;
+  }
+
+  public boolean isOrphan() {
+    return this.referenceCount == 0;
+  }
 
 }

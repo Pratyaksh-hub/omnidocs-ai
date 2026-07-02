@@ -1,17 +1,19 @@
 package com.pratyaksh.omnidocs_ai.document.service.upload;
 
-import com.pratyaksh.omnidocs_ai.document.request.UploadDocumentRequest;
-import com.pratyaksh.omnidocs_ai.document.response.UploadDocumentResponse;
+import com.pratyaksh.omnidocs_ai.ai.event.DocumentUploadedEvent;
+import com.pratyaksh.omnidocs_ai.ai.event.publisher.DocumentEventPublisher;
 import com.pratyaksh.omnidocs_ai.document.entity.Document;
 import com.pratyaksh.omnidocs_ai.document.entity.StoredFile;
-import com.pratyaksh.omnidocs_ai.workspace.entity.Workspace;
 import com.pratyaksh.omnidocs_ai.document.exception.DocumentUploadException;
 import com.pratyaksh.omnidocs_ai.document.mapper.DocumentMapper;
 import com.pratyaksh.omnidocs_ai.document.repository.DocumentRepository;
 import com.pratyaksh.omnidocs_ai.document.repository.StoredFileRepository;
+import com.pratyaksh.omnidocs_ai.document.request.UploadDocumentRequest;
+import com.pratyaksh.omnidocs_ai.document.response.UploadDocumentResponse;
 import com.pratyaksh.omnidocs_ai.storage.model.StorageRequest;
 import com.pratyaksh.omnidocs_ai.storage.model.StoredFileMetadata;
 import com.pratyaksh.omnidocs_ai.storage.service.StorageService;
+import com.pratyaksh.omnidocs_ai.workspace.entity.Workspace;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,7 @@ public class DocumentUploadServiceImpl implements DocumentUploadService {
   private final DocumentRepository documentRepository;
   private final StorageService storageService;
   private final DocumentMapper documentMapper;
+  private final DocumentEventPublisher documentEventPublisher;
 
   @Override
   public UploadDocumentResponse upload(Workspace workspace,
@@ -41,9 +44,15 @@ public class DocumentUploadServiceImpl implements DocumentUploadService {
         request.getContentType()
     );
 
-    documentRepository.save(document);
+    Document savedDocument = documentRepository.save(document);
 
-    return documentMapper.toResponse(document);
+    documentEventPublisher.publish(
+        DocumentUploadedEvent.builder()
+            .documentUuid(savedDocument.getUuid())
+            .build()
+    );
+
+    return documentMapper.toResponse(savedDocument);
   }
 
   private StoredFileMetadata storeFile(UploadDocumentRequest request) {
@@ -69,16 +78,17 @@ public class DocumentUploadServiceImpl implements DocumentUploadService {
 
     return storedFileRepository.findByChecksum(metadata.getChecksum())
         .map(existing -> {
-          existing.setReferenceCount(existing.getReferenceCount() + 1);
+          existing.incrementReferenceCount();
           return existing;
         })
         .orElseGet(() ->
             storedFileRepository.save(
-                StoredFile.builder()
-                    .checksum(metadata.getChecksum())
-                    .storedFileName(metadata.getStoredFileName())
-                    .fileSize(metadata.getFileSize())
-                    .referenceCount(1L)
-                    .build()));
+                StoredFile.create(
+                    metadata.getChecksum(),
+                    metadata.getStoredFileName(),
+                    metadata.getFileSize()
+                )
+            )
+        );
   }
 }

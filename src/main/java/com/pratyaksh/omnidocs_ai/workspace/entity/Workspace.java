@@ -1,17 +1,17 @@
 package com.pratyaksh.omnidocs_ai.workspace.entity;
 
 import com.pratyaksh.omnidocs_ai.common.entity.BaseEntity;
-import jakarta.persistence.*;
-import lombok.*;
-
-import java.util.UUID;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(
     name = "workspaces",
     indexes = {
@@ -20,24 +20,36 @@ import java.util.UUID;
 )
 public class Workspace extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-
-  @Column(nullable = false, unique = true, updatable = false)
-  private UUID uuid;
-
   @Column(nullable = false, length = 150)
   private String name;
 
   @Column(length = 1000)
   private String description;
 
-  @PrePersist
-  private void prePersist() {
-    if (uuid == null) {
-      uuid = UUID.randomUUID();
-    }
+  public static Workspace create(
+      String name,
+      String description
+  ) {
+
+    Workspace workspace = new Workspace();
+    workspace.name = name;
+    workspace.description = description;
+
+    return workspace;
   }
 
+  public void rename(String name) {
+    this.name = name;
+  }
+
+  public void update(String name, String description) {
+
+    if (name != null) {
+      this.name = name;
+    }
+
+    if (description != null) {
+      this.description = description;
+    }
+  }
 }

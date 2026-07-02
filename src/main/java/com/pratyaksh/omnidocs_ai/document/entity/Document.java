@@ -16,10 +16,8 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(
@@ -62,13 +60,15 @@ public class Document extends BaseEntity {
       Workspace workspace,
       StoredFile storedFile,
       String originalFileName,
-      String contentType) {
+      String contentType
+  ) {
 
     Document document = new Document();
-    document.setWorkspace(workspace);
-    document.setStoredFile(storedFile);
-    document.setOriginalFileName(originalFileName);
-    document.setContentType(contentType);
+
+    document.workspace = workspace;
+    document.storedFile = storedFile;
+    document.originalFileName = originalFileName;
+    document.contentType = contentType;
 
     return document;
   }
@@ -78,5 +78,21 @@ public class Document extends BaseEntity {
     if (status == null) {
       status = DocumentStatus.UPLOADED;
     }
+  }
+
+  public void markProcessing() {
+    this.status = DocumentStatus.PROCESSING;
+  }
+
+  public void markReady() {
+    this.status = DocumentStatus.READY;
+  }
+
+  public void markFailed() {
+    this.status = DocumentStatus.FAILED;
+  }
+
+  public void rename(String filename) {
+    this.originalFileName = filename;
   }
 }

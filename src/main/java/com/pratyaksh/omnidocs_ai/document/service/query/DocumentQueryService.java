@@ -1,5 +1,6 @@
 package com.pratyaksh.omnidocs_ai.document.service.query;
 
+import com.pratyaksh.omnidocs_ai.document.entity.Document;
 import com.pratyaksh.omnidocs_ai.document.response.DocumentResponse;
 import com.pratyaksh.omnidocs_ai.document.response.DocumentSummaryResponse;
 import java.util.UUID;
@@ -14,4 +15,6 @@ public interface DocumentQueryService {
       UUID workspaceUuid,
       Pageable pageable
   );
+
+  Document getEntity(UUID documentUuid);
 }

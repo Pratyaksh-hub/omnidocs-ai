@@ -17,4 +17,5 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
       UUID workspaceUuid,
       Pageable pageable
   );
+
 }

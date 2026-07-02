@@ -40,4 +40,14 @@ public class DocumentQueryServiceImpl implements DocumentQueryService {
         .findByWorkspaceUuidAndDeletedFalse(workspaceUuid, pageable)
         .map(documentMapper::toSummaryResponse);
   }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Document getEntity(UUID documentUuid) {
+
+    return documentRepository
+        .findByUuidAndDeletedFalse(documentUuid)
+        .orElseThrow(() ->
+            new DocumentNotFoundException(documentUuid));
+  }
 }

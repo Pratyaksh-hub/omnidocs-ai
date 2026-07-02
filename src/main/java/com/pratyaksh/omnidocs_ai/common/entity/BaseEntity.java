@@ -1,17 +1,21 @@
 package com.pratyaksh.omnidocs_ai.common.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Version;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 @Getter
-@Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
@@ -21,7 +25,7 @@ public abstract class BaseEntity {
   private Long id;
 
   @Column(nullable = false, unique = true, updatable = false)
-  private UUID uuid;
+  protected UUID uuid;
 
   @CreatedDate
   @Column(name = "created_at", nullable = false, updatable = false)
@@ -36,10 +40,10 @@ public abstract class BaseEntity {
   private Long version;
 
   @Column(nullable = false)
-  private boolean deleted = false;
+  protected boolean deleted = false;
 
   @Column(name = "deleted_at")
-  private LocalDateTime deletedAt;
+  protected LocalDateTime deletedAt;
 
   public void markDeleted() {
     this.deleted = true;

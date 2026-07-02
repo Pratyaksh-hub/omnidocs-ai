@@ -7,7 +7,6 @@ import com.pratyaksh.omnidocs_ai.workspace.entity.Workspace;
 import com.pratyaksh.omnidocs_ai.workspace.mapper.WorkspaceMapper;
 import com.pratyaksh.omnidocs_ai.workspace.repository.WorkspaceRepository;
 import com.pratyaksh.omnidocs_ai.workspace.service.query.WorkspaceQueryService;
-import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,9 +37,10 @@ public class WorkspaceCommandServiceImpl implements WorkspaceCommandService {
 
     Workspace workspace = workspaceQueryService.getEntity(workspaceUuid);
 
-    workspaceMapper.updateEntity(request, workspace);
-
-    workspace = workspaceRepository.save(workspace);
+    workspace.update(
+        request.getName(),
+        request.getDescription()
+    );
 
     return workspaceMapper.toResponse(workspace);
   }
@@ -48,12 +48,8 @@ public class WorkspaceCommandServiceImpl implements WorkspaceCommandService {
   @Override
   public void delete(UUID workspaceUuid) {
 
-    Workspace workspace =
-        workspaceQueryService.getEntity(workspaceUuid);
+    Workspace workspace = workspaceQueryService.getEntity(workspaceUuid);
 
-    workspace.setDeleted(true);
-    workspace.setDeletedAt(LocalDateTime.now());
-
-    workspaceRepository.save(workspace);
+    workspace.markDeleted();
   }
 }

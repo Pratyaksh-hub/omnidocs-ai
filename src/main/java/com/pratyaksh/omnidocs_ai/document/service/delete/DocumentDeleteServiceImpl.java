@@ -32,21 +32,13 @@ public class DocumentDeleteServiceImpl implements DocumentDeleteService {
 
     StoredFile storedFile = document.getStoredFile();
 
-    storedFile.setReferenceCount(
-        storedFile.getReferenceCount() - 1
-    );
+    storedFile.decrementReferenceCount();
 
-    if (storedFile.getReferenceCount() == 0) {
+    if (storedFile.isOrphan()) {
 
-      storageService.delete(
-          storedFile.getStoredFileName()
-      );
+      storageService.delete(storedFile.getStoredFileName());
 
       storedFile.markDeleted();
-
-      storedFileRepository.save(storedFile);
     }
-
-    documentRepository.save(document);
   }
 }
