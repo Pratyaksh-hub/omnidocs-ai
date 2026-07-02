@@ -24,7 +24,7 @@ CREATE TABLE document_embeddings
 
     dimensions INT NOT NULL,
 
-    embedding vector(1536) NOT NULL,
+    embedding vector(3072) NOT NULL,
 
     CONSTRAINT fk_embedding_chunk
         FOREIGN KEY (chunk_id)

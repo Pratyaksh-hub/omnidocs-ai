@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -18,8 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmbeddingGenerationServiceImpl
     implements EmbeddingGenerationService {
 
-  private static final String PROVIDER = "OPENAI";
-  private static final String MODEL = "text-embedding-3-small";
+  private static final String PROVIDER = "GEMINI";
+  private static final String MODEL = "gemini-embedding-001";
 
   private final DocumentChunkRepository chunkRepository;
   private final DocumentEmbeddingRepository embeddingRepository;
@@ -28,26 +30,38 @@ public class EmbeddingGenerationServiceImpl
   @Override
   public void generate(Document document) {
 
-    var chunks = chunkRepository.findByDocument(document);
+    List<DocumentChunk> chunks =
+        chunkRepository.findByDocument(document);
+
+    log.info("Generating embeddings for {} chunks",
+        chunks.size());
 
     for (DocumentChunk chunk : chunks) {
 
-      float[] embedding =
-          embeddingProvider.generateEmbedding(chunk.getContent());
+      float[] vector =
+          embeddingProvider.generateEmbedding(
+              chunk.getContent()
+          );
 
-      embeddingRepository.save(
+      DocumentEmbedding embedding =
           DocumentEmbedding.create(
               chunk,
               PROVIDER,
               MODEL,
-              embedding
-          )
-      );
+              vector
+          );
+
+      embeddingRepository.save(embedding);
 
       log.info(
           "Embedding generated for chunk {}",
           chunk.getChunkIndex()
       );
     }
+
+    log.info(
+        "Embedding generation completed for document {}",
+        document.getUuid()
+    );
   }
 }
