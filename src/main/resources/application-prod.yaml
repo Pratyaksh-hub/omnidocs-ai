@@ -1,28 +1,10 @@
 spring:
+
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
-  jpa:
-    hibernate:
-      ddl-auto: validate
-
-    properties:
-      hibernate:
-        format_sql: true
-
-    open-in-view: false
-
-  flyway:
-    enabled: true
-
 logging:
   level:
-    org.springframework: INFO
-
-gemini:
-  api-key: ${GEMINI_API_KEY}
-
-storage:
-  location: ${UPLOAD_DIR:uploads}
+    root: INFO

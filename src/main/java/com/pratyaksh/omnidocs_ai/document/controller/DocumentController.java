@@ -23,6 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/v1/documents")
 @RequiredArgsConstructor
 @Validated
-//@CrossOrigin
+@CrossOrigin("*")
 public class DocumentController {
 
   private static final long MAX_FILE_SIZE = 20 * 1024 * 1024;

@@ -1,0 +1,15 @@
+spring:
+
+  datasource:
+    url: jdbc:postgresql://postgres:5432/omnidocs
+    username: postgres
+    password: postgres
+
+storage:
+  location: /app/uploads
+
+jwt:
+  secret: 5a2f8b8c9d8e7f6a5b4c3d2e1f0a98765a2f8b8c9d8e7f6a5b4c3d2e1f0a9876
+
+gemini:
+  api-key: YOUR_DEV_GEMINI_KEY

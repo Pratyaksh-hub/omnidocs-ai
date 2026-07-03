@@ -53,6 +53,26 @@
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-api</artifactId>
+      <version>0.12.7</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-impl</artifactId>
+      <version>0.12.7</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-jackson</artifactId>
+      <version>0.12.7</version>
+      <scope>runtime</scope>
+    </dependency>
+
     <!-- Database -->
     <dependency>
       <groupId>org.postgresql</groupId>
@@ -71,6 +91,12 @@
     <dependency>
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-database-postgresql</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.hypersistence</groupId>
+      <artifactId>hypersistence-utils-hibernate-63</artifactId>
+      <version>3.9.5</version>
     </dependency>
 
     <!-- Mapping & Boilerplate -->
@@ -102,7 +128,11 @@
       <version>${poi-ooxml.version}</version>
     </dependency>
 
-    <!-- AI -->
+    <dependency>
+      <groupId>eu.bitwalker</groupId>
+      <artifactId>UserAgentUtils</artifactId>
+      <version>1.21</version>
+    </dependency>
 
     <!-- Testing -->
     <dependency>
