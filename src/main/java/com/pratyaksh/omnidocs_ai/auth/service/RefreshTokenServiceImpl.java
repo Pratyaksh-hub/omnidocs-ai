@@ -39,6 +39,7 @@ public class RefreshTokenServiceImpl
     refreshToken.setDeviceName(session.getDeviceName());
     refreshToken.setIpAddress(session.getIpAddress());
     refreshToken.setUserAgent(session.getUserAgent());
+    refreshToken.setRevoked(false);
 
     return refreshTokenRepository.save(refreshToken);
   }

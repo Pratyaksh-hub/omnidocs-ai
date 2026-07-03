@@ -39,7 +39,7 @@ public class UserSession extends BaseEntity {
   @Column(length = 100)
   private String ipAddress;
 
-  @Lob
+  @Column(columnDefinition = "TEXT")
   private String userAgent;
 
   @Column(nullable = false)

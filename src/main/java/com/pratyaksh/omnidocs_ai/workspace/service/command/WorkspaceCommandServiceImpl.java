@@ -1,5 +1,8 @@
 package com.pratyaksh.omnidocs_ai.workspace.service.command;
 
+import com.pratyaksh.omnidocs_ai.auth.service.CurrentUserService;
+import com.pratyaksh.omnidocs_ai.dashboard.repository.UserStatsRepository;
+import com.pratyaksh.omnidocs_ai.user.entity.User;
 import com.pratyaksh.omnidocs_ai.workspace.dto.CreateWorkspaceRequest;
 import com.pratyaksh.omnidocs_ai.workspace.dto.UpdateWorkspaceRequest;
 import com.pratyaksh.omnidocs_ai.workspace.dto.WorkspaceResponse;
@@ -20,13 +23,26 @@ public class WorkspaceCommandServiceImpl implements WorkspaceCommandService {
   private final WorkspaceRepository workspaceRepository;
   private final WorkspaceMapper workspaceMapper;
   private final WorkspaceQueryService workspaceQueryService;
+  private final UserStatsRepository userStatsRepository;
+  private final CurrentUserService currentUserService;
 
   @Override
+  @Transactional
   public WorkspaceResponse create(CreateWorkspaceRequest request) {
 
-    Workspace workspace = workspaceMapper.toEntity(request);
+    User user = currentUserService.getCurrentUser();
+
+    Workspace workspace = Workspace.create(
+        user,
+        request.getName(),
+        request.getDescription()
+    );
 
     workspace = workspaceRepository.save(workspace);
+
+    userStatsRepository.incrementWorkspaceCount(
+        user.getId()
+    );
 
     return workspaceMapper.toResponse(workspace);
   }
@@ -51,5 +67,8 @@ public class WorkspaceCommandServiceImpl implements WorkspaceCommandService {
     Workspace workspace = workspaceQueryService.getEntity(workspaceUuid);
 
     workspace.markDeleted();
+
+    User user = currentUserService.getCurrentUser();
+    userStatsRepository.decrementWorkspaceCount(user.getId());
   }
 }

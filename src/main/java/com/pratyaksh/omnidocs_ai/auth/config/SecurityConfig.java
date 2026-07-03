@@ -47,8 +47,8 @@ public class SecurityConfig {
             .httpStrictTransportSecurity(Customizer.withDefaults()))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-            .anyRequest().permitAll())
-        .authenticationProvider(authenticationProvider)
+            .requestMatchers("/api/v1/auth/**").permitAll()
+            .anyRequest().authenticated())
         .addFilterBefore(
             jwtAuthenticationFilter,
             UsernamePasswordAuthenticationFilter.class

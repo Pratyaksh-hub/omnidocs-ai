@@ -9,6 +9,9 @@ CREATE TABLE workspaces
     -- Unique identifier used for API exposure to prevent sequential ID leaking
     uuid UUID NOT NULL UNIQUE,
 
+    -- Added to fix Hibernate validation error: missing column [owner_id]
+    owner_id BIGINT NOT NULL,
+
     name VARCHAR(150) NOT NULL,
 
     description VARCHAR(1000),
@@ -18,12 +21,20 @@ CREATE TABLE workspaces
     updated_at TIMESTAMP NOT NULL,
 
     -- Used for optimistic locking in Hibernate (@Version)
-    version BIGINT NOT NULL
+    version BIGINT NOT NULL,
+
+    CONSTRAINT fk_workspace_owner
+        FOREIGN KEY (owner_id)
+            REFERENCES users(id)
 );
 
 -- Index to optimize lookups by business UUID
 CREATE INDEX idx_workspace_uuid
 ON workspaces(uuid);
+
+-- Index to optimize lookups by workspace owner
+CREATE INDEX idx_workspace_owner
+ON workspaces(owner_id);
 
 
 -- =========================================================================

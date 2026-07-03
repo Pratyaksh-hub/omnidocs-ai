@@ -20,108 +20,81 @@ import org.springframework.stereotype.Service;
 public class JwtServiceImpl implements JwtService {
 
   private final JwtProperties jwtProperties;
-
   private SecretKey signingKey;
+
+  private static final String ACCESS = "ACCESS";
+  private static final String REFRESH = "REFRESH";
 
   @PostConstruct
   public void init() {
     signingKey = Keys.hmacShaKeyFor(
-        jwtProperties.getSecret()
-            .getBytes(StandardCharsets.UTF_8)
+        jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8)
     );
   }
 
   @Override
   public String generateAccessToken(User user) {
-
-    return buildToken(
-        user,
-        ACCESS_TOKEN,
-        jwtProperties.getAccessTokenExpiration()
-    );
+    return buildToken(user, ACCESS, jwtProperties.getAccessTokenExpiration());
   }
 
   @Override
   public String generateRefreshToken(User user) {
-
-    return buildToken(
-        user,
-        REFRESH_TOKEN,
-        jwtProperties.getRefreshTokenExpiration()
-    );
+    return buildToken(user, REFRESH, jwtProperties.getRefreshTokenExpiration());
   }
 
-  private String buildToken(
-      User user,
-      String tokenType,
-      long expiration) {
+  private String buildToken(User user, String type, long exp) {
 
     long now = System.currentTimeMillis();
 
     Map<String, Object> claims = new HashMap<>();
-
     claims.put("uid", user.getUuid().toString());
     claims.put("role", user.getRole().name());
-    claims.put("type", tokenType);
+    claims.put("type", type);
 
     return Jwts.builder()
         .claims(claims)
         .subject(user.getEmail())
         .issuedAt(new Date(now))
-        .expiration(new Date(now + expiration))
+        .expiration(new Date(now + exp))
         .signWith(signingKey)
         .compact();
   }
 
   @Override
   public String extractEmail(String token) {
-    return extractClaims(token).getSubject();
+    return extract(token).getSubject();
   }
 
   @Override
   public UUID extractUserUuid(String token) {
-
-    return UUID.fromString(
-        extractClaims(token)
-            .get("uid", String.class)
-    );
+    return UUID.fromString(extract(token).get("uid", String.class));
   }
 
   @Override
   public String extractTokenType(String token) {
-
-    return extractClaims(token)
-        .get("type", String.class);
+    return extract(token).get("type", String.class);
   }
 
   @Override
   public boolean isAccessToken(String token) {
-    return ACCESS_TOKEN.equals(extractTokenType(token));
+    return ACCESS.equals(extractTokenType(token));
   }
 
   @Override
   public boolean isRefreshToken(String token) {
-    return REFRESH_TOKEN.equals(extractTokenType(token));
+    return REFRESH.equals(extractTokenType(token));
   }
 
   @Override
   public boolean isTokenValid(String token) {
-
     try {
-
-      Claims claims = extractClaims(token);
-
-      return claims.getExpiration()
-          .after(new Date());
-
-    } catch (Exception ex) {
-
+      return extract(token).getExpiration().after(new Date());
+    } catch (Exception e) {
       return false;
     }
   }
 
-  private Claims extractClaims(String token) {
-
+  private Claims extract(String token) {
     return Jwts.parser()
         .verifyWith(signingKey)
         .build()
@@ -129,4 +102,13 @@ public class JwtServiceImpl implements JwtService {
         .getPayload();
   }
 
+  @Override
+  public long getAccessTokenExpiration() {
+    return jwtProperties.getAccessTokenExpiration();
+  }
+
+  @Override
+  public long getRefreshTokenExpiration() {
+    return jwtProperties.getRefreshTokenExpiration();
+  }
 }

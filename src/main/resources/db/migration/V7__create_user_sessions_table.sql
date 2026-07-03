@@ -22,6 +22,7 @@ CREATE TABLE user_sessions
 
     revoked BOOLEAN NOT NULL DEFAULT FALSE,
 
+    -- Audit Columns from BaseEntity
     created_by VARCHAR(255),
 
     created_at TIMESTAMP NOT NULL,
@@ -33,6 +34,9 @@ CREATE TABLE user_sessions
     deleted BOOLEAN NOT NULL DEFAULT FALSE,
 
     deleted_at TIMESTAMP,
+
+    -- Optimistic Locking Version inherited from BaseEntity (Mapped from Java Long)
+    version BIGINT NOT NULL DEFAULT 0,
 
     CONSTRAINT fk_user_session_user
         FOREIGN KEY(user_id)

@@ -1,6 +1,7 @@
 package com.pratyaksh.omnidocs_ai.auth.controller;
 
 import com.pratyaksh.omnidocs_ai.auth.request.LoginRequest;
+import com.pratyaksh.omnidocs_ai.auth.request.LogoutRequest;
 import com.pratyaksh.omnidocs_ai.auth.request.RefreshTokenRequest;
 import com.pratyaksh.omnidocs_ai.auth.request.SignupRequest;
 import com.pratyaksh.omnidocs_ai.auth.response.AuthResponse;
@@ -25,12 +26,11 @@ public class AuthController {
 
   @PostMapping("/signup")
   public ResponseEntity<ApiResponse<AuthResponse>> signup(
-      @Valid @RequestBody SignupRequest request,
-      HttpServletRequest servletRequest) {
+      @Valid @RequestBody SignupRequest request) {
 
     return ResponseEntity
         .status(HttpStatus.CREATED)
-        .body(ApiResponse.success(authService.signup(request, servletRequest)));
+        .body(ApiResponse.success(authService.signup(request)));
   }
 
   @PostMapping("/login")
@@ -57,9 +57,10 @@ public class AuthController {
   }
 
   @PostMapping("/logout")
-  public ResponseEntity<ApiResponse<Void>> logout() {
+  public ResponseEntity<ApiResponse<Void>> logout(
+      @Valid @RequestBody LogoutRequest request) {
 
-    authService.logout();
+    authService.logout(request);
 
     return ResponseEntity.ok(
         ApiResponse.success(null)

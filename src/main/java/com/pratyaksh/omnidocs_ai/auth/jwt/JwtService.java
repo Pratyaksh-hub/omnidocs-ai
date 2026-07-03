@@ -5,9 +5,6 @@ import java.util.UUID;
 
 public interface JwtService {
 
-  String ACCESS_TOKEN = "ACCESS";
-  String REFRESH_TOKEN = "REFRESH";
-
   String generateAccessToken(User user);
 
   String generateRefreshToken(User user);
@@ -23,4 +20,8 @@ public interface JwtService {
   boolean isRefreshToken(String token);
 
   boolean isTokenValid(String token);
+
+  long getAccessTokenExpiration();
+
+  long getRefreshTokenExpiration();
 }

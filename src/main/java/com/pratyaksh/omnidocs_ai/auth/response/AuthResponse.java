@@ -1,5 +1,6 @@
 package com.pratyaksh.omnidocs_ai.auth.response;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,4 +23,11 @@ public class AuthResponse {
 
   private String refreshToken;
 
+  private LocalDateTime accessTokenExpiresAt;
+
+  private LocalDateTime refreshTokenExpiresAt;
+
+  private Long accessTokenExpiresIn;
+
+  private Long refreshTokenExpiresIn;
 }

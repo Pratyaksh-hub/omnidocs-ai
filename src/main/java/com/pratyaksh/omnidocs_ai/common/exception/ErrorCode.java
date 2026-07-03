@@ -20,7 +20,9 @@ public enum ErrorCode {
 
   INVALID_DOCUMENT(HttpStatus.BAD_REQUEST),
 
-  STORAGE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR);
+  STORAGE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR),
+
+  DUPLICATE_EMAIL(HttpStatus.CONFLICT);
 
   private final HttpStatus httpStatus;
 

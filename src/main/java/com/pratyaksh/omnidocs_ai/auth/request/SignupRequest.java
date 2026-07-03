@@ -10,20 +10,20 @@ import lombok.Setter;
 @Setter
 public class SignupRequest {
 
-  @NotBlank
-  @Size(max = 100)
+  @NotBlank(message = "First name is required")
+  @Size(max = 100, message = "First name cannot exceed 100 characters")
   private String firstName;
 
-  @NotBlank
-  @Size(max = 100)
+  @NotBlank(message = "Last name is required")
+  @Size(max = 100, message = "Last name cannot exceed 100 characters")
   private String lastName;
 
-  @Email
-  @NotBlank
+  @NotBlank(message = "Email address is required")
+  @Email(message = "Please provide a valid email address")
   private String email;
 
-  @NotBlank
-  @Size(min = 8, max = 100)
+  @NotBlank(message = "Password is required")
+  @Size(min = 8, max = 100, message = "Password must be between 8 and 100 characters long")
   private String password;
 
 }

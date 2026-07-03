@@ -1,11 +1,13 @@
 package com.pratyaksh.omnidocs_ai.common.exception;
 
 import com.pratyaksh.omnidocs_ai.common.response.ApiResponse;
+import com.pratyaksh.omnidocs_ai.user.exception.UserAlreadyExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -95,6 +97,38 @@ public class GlobalExceptionHandler {
         .build();
 
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(ApiResponse.failure(error));
+  }
+
+  @ExceptionHandler(UserAlreadyExistsException.class)
+  public ResponseEntity<ApiResponse<Void>> handleUserAlreadyExists(
+      UserAlreadyExistsException ex, HttpServletRequest request) {
+
+    ErrorResponse error = ErrorResponse.builder()
+        .timestamp(LocalDateTime.now())
+        .code(ErrorCode.DUPLICATE_EMAIL.name())
+        .message(ex.getMessage())
+        .path(request.getRequestURI())
+        .build();
+
+    return ResponseEntity
+        .status(HttpStatus.CONFLICT) // 409 Conflict is ideal for existing resources
+        .body(ApiResponse.failure(error));
+  }
+
+  @ExceptionHandler(BadCredentialsException.class)
+  public ResponseEntity<ApiResponse<Void>> handleBadCredentialsException(
+      BadCredentialsException ex, HttpServletRequest request) {
+
+    ErrorResponse error = ErrorResponse.builder()
+        .timestamp(LocalDateTime.now())
+        .message(ex.getMessage())
+        .error("Bad Credentials")
+        .path(request.getRequestURI())
+        .build();
+
+    return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
         .body(ApiResponse.failure(error));
   }
 }
