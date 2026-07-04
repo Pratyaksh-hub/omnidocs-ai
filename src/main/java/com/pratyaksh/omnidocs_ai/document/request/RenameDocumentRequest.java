@@ -1,0 +1,16 @@
+package com.pratyaksh.omnidocs_ai.document.request;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class RenameDocumentRequest {
+
+  @NotBlank
+  @Size(max = 255)
+  private String name;
+
+}
