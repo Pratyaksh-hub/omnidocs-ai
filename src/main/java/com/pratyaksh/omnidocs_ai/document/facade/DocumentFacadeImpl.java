@@ -1,6 +1,7 @@
 package com.pratyaksh.omnidocs_ai.document.facade;
 
 import com.pratyaksh.omnidocs_ai.common.response.PageResponse;
+import com.pratyaksh.omnidocs_ai.document.request.RenameDocumentRequest;
 import com.pratyaksh.omnidocs_ai.document.request.UploadDocumentRequest;
 import com.pratyaksh.omnidocs_ai.document.response.DocumentResponse;
 import com.pratyaksh.omnidocs_ai.document.response.DocumentSummaryResponse;
@@ -100,5 +101,20 @@ public class DocumentFacadeImpl
     return PageResponse.of(
         documentQueryService.getDeletedDocuments(pageable)
     );
+  }
+
+  @Override
+  public void permanentDelete(UUID documentUuid) {
+    documentUploadService.permanentDelete(documentUuid);
+  }
+
+  @Override
+  public DocumentResponse restore(UUID documentUuid) {
+    return documentUploadService.restore(documentUuid);
+  }
+
+  @Override
+  public DocumentResponse rename(UUID documentUuid, RenameDocumentRequest request) {
+    return documentUploadService.rename(documentUuid, request);
   }
 }

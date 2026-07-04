@@ -68,4 +68,18 @@ public interface UserStatsRepository
       @Param("userId") Long userId
   );
 
+  @Modifying
+  @Query("""
+UPDATE UserStatistics s
+SET s.totalDocuments =
+(
+    SELECT COUNT(d)
+    FROM Document d
+    WHERE d.workspace.owner.id = :userId
+      AND d.deleted = false
+)
+WHERE s.user.id = :userId
+""")
+  void refreshDocumentCount(Long userId);
+
 }

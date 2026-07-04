@@ -5,11 +5,13 @@ import com.pratyaksh.omnidocs_ai.common.response.PageResponse;
 import com.pratyaksh.omnidocs_ai.document.exception.DocumentUploadException;
 import com.pratyaksh.omnidocs_ai.document.exception.InvalidDocumentException;
 import com.pratyaksh.omnidocs_ai.document.facade.DocumentFacade;
+import com.pratyaksh.omnidocs_ai.document.request.RenameDocumentRequest;
 import com.pratyaksh.omnidocs_ai.document.request.UploadDocumentRequest;
 import com.pratyaksh.omnidocs_ai.document.response.DocumentResponse;
 import com.pratyaksh.omnidocs_ai.document.response.DocumentSummaryResponse;
 import com.pratyaksh.omnidocs_ai.document.response.DownloadDocumentResponse;
 import com.pratyaksh.omnidocs_ai.document.response.UploadDocumentResponse;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.Set;
@@ -26,8 +28,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -151,6 +155,45 @@ public class DocumentController {
         ApiResponse.success(
             documentFacade.getDeletedDocuments(pageable)
         )
+    );
+  }
+
+  @PatchMapping("/{documentUuid}/rename")
+  public ResponseEntity<ApiResponse<DocumentResponse>> rename(
+      @PathVariable UUID documentUuid,
+      @Valid @RequestBody RenameDocumentRequest request) {
+
+    return ResponseEntity.ok(
+        ApiResponse.success(
+            documentFacade.rename(
+                documentUuid,
+                request
+            )
+        )
+    );
+  }
+
+  @PostMapping("/{documentUuid}/restore")
+  public ResponseEntity<ApiResponse<DocumentResponse>> restore(
+      @PathVariable UUID documentUuid) {
+
+    return ResponseEntity.ok(
+        ApiResponse.success(
+            documentFacade.restore(
+                documentUuid
+            )
+        )
+    );
+  }
+
+  @DeleteMapping("/{documentUuid}/permanent")
+  public ResponseEntity<ApiResponse<Void>> permanentDelete(
+      @PathVariable UUID documentUuid) {
+
+    documentFacade.permanentDelete(documentUuid);
+
+    return ResponseEntity.ok(
+        ApiResponse.success(null)
     );
   }
 }

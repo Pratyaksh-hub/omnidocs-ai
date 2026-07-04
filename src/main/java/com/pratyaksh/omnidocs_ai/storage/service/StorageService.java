@@ -13,5 +13,4 @@ public interface StorageService {
   void delete(String storagePath);
 
   boolean exists(String storagePath);
-
 }

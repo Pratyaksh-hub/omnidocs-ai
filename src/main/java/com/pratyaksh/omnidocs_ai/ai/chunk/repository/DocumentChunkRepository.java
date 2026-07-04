@@ -5,6 +5,8 @@ import com.pratyaksh.omnidocs_ai.document.entity.Document;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 public interface DocumentChunkRepository
     extends JpaRepository<DocumentChunk, Long> {
@@ -13,4 +15,10 @@ public interface DocumentChunkRepository
 
   void deleteByDocument_Uuid(UUID documentUuid);
 
+  @Modifying
+  @Query("""
+      DELETE FROM DocumentChunk c
+      WHERE c.document = :document
+      """)
+  void deleteByDocument(Document document);
 }

@@ -3,17 +3,15 @@ package com.pratyaksh.omnidocs_ai.document.service.delete;
 import com.pratyaksh.omnidocs_ai.auth.service.CurrentUserService;
 import com.pratyaksh.omnidocs_ai.dashboard.repository.UserStatsRepository;
 import com.pratyaksh.omnidocs_ai.document.entity.Document;
-import com.pratyaksh.omnidocs_ai.document.entity.StoredFile;
 import com.pratyaksh.omnidocs_ai.document.exception.DocumentNotFoundException;
 import com.pratyaksh.omnidocs_ai.document.repository.DocumentRepository;
 import com.pratyaksh.omnidocs_ai.document.repository.StoredFileRepository;
 import com.pratyaksh.omnidocs_ai.storage.service.StorageService;
 import com.pratyaksh.omnidocs_ai.user.entity.User;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -29,26 +27,17 @@ public class DocumentDeleteServiceImpl implements DocumentDeleteService {
   @Override
   public void delete(UUID documentUuid) {
 
+    User user = currentUserService.getCurrentUser();
+
     Document document = documentRepository
-        .findByUuidAndDeletedFalse(documentUuid)
-        .orElseThrow(() -> new DocumentNotFoundException(documentUuid));
+        .findByUuidAndWorkspace_OwnerAndDeletedFalse(
+            documentUuid,
+            user)
+        .orElseThrow(() ->
+            new DocumentNotFoundException(documentUuid));
 
     document.markDeleted();
 
-    StoredFile storedFile = document.getStoredFile();
-
-    storedFile.decrementReferenceCount();
-
-    if (storedFile.isOrphan()) {
-
-      storageService.delete(storedFile.getStoredFileName());
-
-      storedFile.markDeleted();
-    }
-
-    User user = currentUserService.getCurrentUser();
-    userStatsRepository.decrementDocumentCount(
-        user.getId()
-    );
+    userStatsRepository.decrementDocumentCount(user.getId());
   }
 }

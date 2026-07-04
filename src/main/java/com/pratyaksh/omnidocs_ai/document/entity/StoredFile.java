@@ -60,15 +60,16 @@ public class StoredFile extends BaseEntity {
 
   public void decrementReferenceCount() {
 
-    if (this.referenceCount == 0) {
-      throw new IllegalStateException("Reference count cannot be negative.");
+    if (referenceCount <= 0) {
+      throw new IllegalStateException(
+          "Reference count cannot be negative.");
     }
 
     this.referenceCount--;
   }
 
   public boolean isOrphan() {
-    return this.referenceCount == 0;
+    return referenceCount == 0;
   }
 
 }

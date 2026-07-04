@@ -69,7 +69,7 @@ CREATE TABLE stored_files
         UNIQUE(checksum),
 
     CONSTRAINT chk_reference_count
-        CHECK (reference_count > 0),
+        CHECK (reference_count >= 0),
 
     CONSTRAINT chk_file_size
         CHECK (file_size > 0)

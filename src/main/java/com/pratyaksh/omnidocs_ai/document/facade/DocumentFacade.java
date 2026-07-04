@@ -1,11 +1,13 @@
 package com.pratyaksh.omnidocs_ai.document.facade;
 
 import com.pratyaksh.omnidocs_ai.common.response.PageResponse;
+import com.pratyaksh.omnidocs_ai.document.request.RenameDocumentRequest;
 import com.pratyaksh.omnidocs_ai.document.response.DocumentResponse;
 import com.pratyaksh.omnidocs_ai.document.response.DocumentSummaryResponse;
 import com.pratyaksh.omnidocs_ai.document.response.DownloadDocumentResponse;
 import com.pratyaksh.omnidocs_ai.document.request.UploadDocumentRequest;
 import com.pratyaksh.omnidocs_ai.document.response.UploadDocumentResponse;
+import jakarta.validation.Valid;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 
@@ -32,4 +34,10 @@ public interface DocumentFacade {
   PageResponse<DocumentSummaryResponse> getDeletedDocuments(
       Pageable pageable
   );
+
+  void permanentDelete(UUID documentUuid);
+
+  DocumentResponse restore(UUID documentUuid);
+
+  DocumentResponse rename(UUID documentUuid, @Valid RenameDocumentRequest request);
 }

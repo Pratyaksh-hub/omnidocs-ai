@@ -27,7 +27,7 @@ public class DocumentQueryServiceImpl implements DocumentQueryService {
     Document document = documentRepository.findByUuidAndDeletedFalse(documentUuid)
         .orElseThrow(() -> new DocumentNotFoundException(documentUuid));
 
-    return documentMapper.toDocumentResponse(document);
+    return documentMapper.toResponse(document);
   }
 
   @Override
