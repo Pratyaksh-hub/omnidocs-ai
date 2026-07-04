@@ -6,7 +6,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,13 +27,12 @@ public class SecurityConfig {
   private final DaoAuthenticationProvider authenticationProvider;
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http)
-      throws Exception {
-
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
+        // 1. Move CORS to the absolute top of the chain
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .authenticationProvider(authenticationProvider)
         .csrf(AbstractHttpConfigurer::disable)
-        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .httpBasic(AbstractHttpConfigurer::disable)
         .formLogin(AbstractHttpConfigurer::disable)
         .logout(AbstractHttpConfigurer::disable)
@@ -47,13 +45,9 @@ public class SecurityConfig {
             .contentTypeOptions(Customizer.withDefaults())
             .httpStrictTransportSecurity(Customizer.withDefaults()))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .requestMatchers("/api/v1/auth/**").permitAll()
             .anyRequest().authenticated())
-        .addFilterBefore(
-            jwtAuthenticationFilter,
-            UsernamePasswordAuthenticationFilter.class
-        );
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
