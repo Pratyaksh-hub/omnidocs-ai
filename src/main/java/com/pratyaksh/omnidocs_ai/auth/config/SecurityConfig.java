@@ -2,7 +2,6 @@ package com.pratyaksh.omnidocs_ai.auth.config;
 
 import com.pratyaksh.omnidocs_ai.auth.security.JwtAuthenticationEntryPoint;
 import com.pratyaksh.omnidocs_ai.auth.security.JwtAuthenticationFilter;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +13,6 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @RequiredArgsConstructor
@@ -29,8 +25,8 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
-        // 1. Move CORS to the absolute top of the chain
-        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        // Tells Spring Security to use the highest-precedence global CorsFilter bean directly
+        .cors(Customizer.withDefaults())
         .authenticationProvider(authenticationProvider)
         .csrf(AbstractHttpConfigurer::disable)
         .httpBasic(AbstractHttpConfigurer::disable)
@@ -50,38 +46,5 @@ public class SecurityConfig {
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
-  }
-
-  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
-
-    CorsConfiguration configuration = new CorsConfiguration();
-
-    configuration.setAllowedOriginPatterns(List.of(
-        "http://localhost:3000",
-        "https://*.vercel.app",
-        "https://*.onrender.com",
-        "https://omnidocs-ai-frontend.vercel.app/"
-    ));
-
-    configuration.setAllowedMethods(List.of(
-        "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-
-    // Replace your strict list with a wildcard to accept all incoming headers
-    configuration.setAllowedHeaders(List.of("*"));
-
-    configuration.setExposedHeaders(List.of(
-        "Content-Disposition",
-        "X-Access-Token-Expires-At"
-    ));
-
-    configuration.setAllowCredentials(true);
-
-    UrlBasedCorsConfigurationSource source =
-        new UrlBasedCorsConfigurationSource();
-
-    source.registerCorsConfiguration("/**", configuration);
-
-    return source;
   }
 }
