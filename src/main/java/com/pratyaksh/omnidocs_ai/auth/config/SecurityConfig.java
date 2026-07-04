@@ -71,12 +71,8 @@ public class SecurityConfig {
     configuration.setAllowedMethods(List.of(
         "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
-    configuration.setAllowedHeaders(List.of(
-        "Authorization",
-        "Content-Type",
-        "Accept",
-        "Origin"
-    ));
+    // Replace your strict list with a wildcard to accept all incoming headers
+    configuration.setAllowedHeaders(List.of("*"));
 
     configuration.setExposedHeaders(List.of(
         "Content-Disposition",
