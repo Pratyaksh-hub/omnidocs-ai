@@ -32,6 +32,7 @@ public class SecurityConfig {
       throws Exception {
 
     http
+        .authenticationProvider(authenticationProvider)
         .csrf(AbstractHttpConfigurer::disable)
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .httpBasic(AbstractHttpConfigurer::disable)
@@ -70,10 +71,17 @@ public class SecurityConfig {
     configuration.setAllowedMethods(List.of(
         "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
-    configuration.setAllowedHeaders(List.of("*"));
+    configuration.setAllowedHeaders(List.of(
+        "Authorization",
+        "Content-Type",
+        "Accept",
+        "Origin"
+    ));
 
     configuration.setExposedHeaders(List.of(
-        "Content-Disposition"));
+        "Content-Disposition",
+        "X-Access-Token-Expires-At"
+    ));
 
     configuration.setAllowCredentials(true);
 
