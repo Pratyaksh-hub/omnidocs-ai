@@ -5,6 +5,7 @@ import com.pratyaksh.omnidocs_ai.common.response.PageResponse;
 import com.pratyaksh.omnidocs_ai.document.facade.DocumentFacade;
 import com.pratyaksh.omnidocs_ai.document.response.DocumentSummaryResponse;
 import com.pratyaksh.omnidocs_ai.workspace.dto.CreateWorkspaceRequest;
+import com.pratyaksh.omnidocs_ai.workspace.dto.RenameWorkspaceRequest;
 import com.pratyaksh.omnidocs_ai.workspace.dto.UpdateWorkspaceRequest;
 import com.pratyaksh.omnidocs_ai.workspace.dto.WorkspaceResponse;
 import com.pratyaksh.omnidocs_ai.workspace.facade.WorkspaceFacade;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -113,6 +115,22 @@ public class WorkspaceController {
             documentFacade.getDeletedDocuments(
                 workspaceUuid,
                 pageable
+            )
+        )
+    );
+  }
+
+  @PatchMapping("/{workspaceUuid}/rename")
+  public ResponseEntity<ApiResponse<WorkspaceResponse>> rename(
+      @PathVariable UUID workspaceUuid,
+      @Valid @RequestBody RenameWorkspaceRequest request
+  ) {
+
+    return ResponseEntity.ok(
+        ApiResponse.success(
+            workspaceFacade.rename(
+                workspaceUuid,
+                request
             )
         )
     );

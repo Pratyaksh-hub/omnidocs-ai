@@ -1,10 +1,23 @@
 package com.pratyaksh.omnidocs_ai.user.entity;
 
 import com.pratyaksh.omnidocs_ai.common.entity.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -89,19 +102,14 @@ public class User extends BaseEntity {
       String passwordHash) {
 
     User user = new User();
-
     user.setFirstName(firstName);
     user.setLastName(lastName);
     user.setEmail(email.toLowerCase().trim());
     user.setPasswordHash(passwordHash);
-
     user.setRole(UserRole.USER);
     user.setStatus(UserStatus.PENDING_VERIFICATION);
-
     user.setEmailVerified(false);
-
     user.setFailedLoginAttempts(0);
-
     user.setLastPasswordChangedAt(LocalDateTime.now());
 
     return user;

@@ -2,6 +2,7 @@ package com.pratyaksh.omnidocs_ai.workspace.facade;
 
 import com.pratyaksh.omnidocs_ai.common.response.PageResponse;
 import com.pratyaksh.omnidocs_ai.workspace.dto.CreateWorkspaceRequest;
+import com.pratyaksh.omnidocs_ai.workspace.dto.RenameWorkspaceRequest;
 import com.pratyaksh.omnidocs_ai.workspace.dto.UpdateWorkspaceRequest;
 import com.pratyaksh.omnidocs_ai.workspace.dto.WorkspaceResponse;
 import com.pratyaksh.omnidocs_ai.workspace.service.command.WorkspaceCommandService;
@@ -48,5 +49,14 @@ public class WorkspaceFacadeImpl implements WorkspaceFacade {
         workspaceQueryService.getAll(pageable);
 
     return PageResponse.of(page);
+  }
+
+  @Override
+  public WorkspaceResponse rename(
+      UUID workspaceUuid,
+      RenameWorkspaceRequest request
+  ) {
+
+    return workspaceCommandService.rename(workspaceUuid, request);
   }
 }

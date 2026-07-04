@@ -1,12 +1,11 @@
 package com.pratyaksh.omnidocs_ai.dashboard.service;
 
-import com.pratyaksh.omnidocs_ai.auth.security.CustomUserDetails;
+import com.pratyaksh.omnidocs_ai.auth.service.CurrentUserService;
 import com.pratyaksh.omnidocs_ai.dashboard.entity.UserStatistics;
 import com.pratyaksh.omnidocs_ai.dashboard.repository.UserStatsRepository;
 import com.pratyaksh.omnidocs_ai.dashboard.response.UserStatsResponse;
+import com.pratyaksh.omnidocs_ai.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,23 +15,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserStatsServiceImpl implements UserStatsService {
 
   private final UserStatsRepository repository;
+  private final CurrentUserService currentUserService;
 
   @Override
   public UserStatsResponse getDashboard() {
 
-    Authentication authentication =
-        SecurityContextHolder.getContext().getAuthentication();
-
-    CustomUserDetails principal =
-        (CustomUserDetails) authentication.getPrincipal();
+    User user = currentUserService.getCurrentUser();
 
     UserStatistics stats =
-        repository.findByUser(principal.getUser())
+        repository.findByUser(user)
             .orElseGet(() -> {
 
               UserStatistics dashboardStats = new UserStatistics();
 
-              dashboardStats.setUser(principal.getUser());
+              dashboardStats.setUser(user);
               dashboardStats.setTotalWorkspaces(0);
               dashboardStats.setTotalDocuments(0);
 
