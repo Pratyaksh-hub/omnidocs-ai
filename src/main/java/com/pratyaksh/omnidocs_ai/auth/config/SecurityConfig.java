@@ -65,7 +65,9 @@ public class SecurityConfig {
 
     configuration.setAllowedOriginPatterns(List.of(
         "http://localhost:3000",
-        "https://*.vercel.app"
+        "https://*.vercel.app",
+        "https://*.onrender.com",
+        "https://omnidocs-ai-frontend.vercel.app/"
     ));
 
     configuration.setAllowedMethods(List.of(
