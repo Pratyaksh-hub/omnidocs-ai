@@ -20,7 +20,7 @@ public class CorsConfig {
     // Match your local and production environments perfectly
     configuration.setAllowedOriginPatterns(List.of(
         "http://localhost:3000",
-        "https://*.vercel.app"
+        "https://omnidocs-ai-frontend.vercel.app"
     ));
 
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
